@@ -1,9 +1,7 @@
-<!DOCTYPE HTML>
+<HTML>
 <head>
 	Hello Dariusz Nazar
 </head>
 <body>
 
-
 </body>
-</HTML>
