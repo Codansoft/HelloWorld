@@ -1,0 +1,145 @@
+==== Successful Git branching model (nvie) ====
+	master						// Always reflects a production-ready state
+		|--hotfix-*				// Created from the master. 
+	release-1.1					// Created from the develop branch. Must merge back into master, develop.
+	develop
+		|--feature-branches		// Feature branches typically exist in developer repos only
+====================================================================================================
+##Online Reference
+		http://gitref.org
+
+## Console 
+	- MinGW (Minimalist GNU for Windows)
+	- MSYS, a contraction of "Minimal SYStem - alternative to cmd.exe
+	gitk - The Git repository browser
+	gitk [<options>] [<revision range>] [\--] [<path>…​]
+
+	git-gui - A portable graphical interface to Git
+	git gui [<command>] [arguments]
+
+	$ pwd "Printing the Working Directory"
+	$ explorer .				// Opens explorer
+	$ cd <drag and drop dir>
+	$ cat file.txt					//Read File
+
+#### Porcelain Commands ####
+## Setup
+	$ git config --list				//Checking Your Settings
+	$ git config user.name
+	$ git config --global user.name "John Doe"
+	$ git config --global user.email dariusz.nazar@fs.utc.com
+	$ git config --global core.editor "'c:/program files (x86)/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin"
+
+	$ git mergetool --tool-help
+	$ git config --global --add merge.tool kdiff3		IntelliJ IDEA, P4Merge, Meld
+	$ git config --global --add mergetool.kdiff3.path "C:/Program Files/KDiff3/kdiff3.exe"
+	$ git config --global --add mergetool.kdiff3.trustExitCode false
+
+	$ git config --global --add diff.guitool kdiff3
+	$ git config --global --add difftool.kdiff3.path "C:/Program Files/KDiff3/kdiff3.exe"
+	$ git config --global --add difftool.kdiff3.trustExitCode false
+	
+## Remote
+	cd X:\Users
+	$ git clone "D:\00. Projects\Git\Powerful" PowerfulTestX
+	$ git clone file:///srv/git/project.git
+	$ git remote -v
+	$ git remote add proj_name /srv/git/project.git
+	$ git fetch origin
+	$ git fetch proj_name					// get data from your remote projects
+	$ git push origin master
+	$ git remote show origin
+	$ git remote rename pb paul
+
+	$ git init
+	$ git init --bare				// bare repo. Center for sharing.
+	$ touch .gitignore
+	$ git add .						// all files & subdirectories
+	
+	$ git commit -am 'message'		// Commit All files
+	$ rm file.txt					// Remove File
+	$ git rm file.txt
+	$ git mv file_from file_to		// Rename File
+
+## Inspection
+	$ git log
+	$ git log --oneline --decorate
+	$ git log --pretty=format:"%h - %an, %ar : %s"
+	$ git log --graph --oneline --decorate  --all		// *** Great ***
+	$ git log --author
+	$ git log --grep=searchedText --no-merges
+	
+## Tagging - mark release points
+		1) lightweight - pointer to commit
+		2) annotated - full objects
+	$ git tag 
+	$ git tag -a v1.4 -m "my version 1.4"
+	$ git show v1.4
+	$ git tag v1.4-lightweight
+
+## Aliase for each command
+	$ git config --global alias.st status	== $ git st
+
+## Branch
+	// HEAD pointer - branch you’re currently on. Snapshot of your last commit.
+	// INDEX - proposed next commit.
+	$ git branch develop		// Create Branch
+	$ git checkout develop		//Switching Branches
+	$ git checkout master
+	$ git checkout -b iss53		// Switched to a new branch "iss53"		== $ git branch iss53 ; $ git checkout iss53
+	git merge == git rebase
+	
+## Merge Branch
+	$ git checkout master
+	$ git merge hotfix
+	$ git mergetool					// Initiate merge ("merge.tool" variable in ".gitconfig")
+	$ git branch -d hotfix			// Deleted branch hotfix
+	$ git branch -vv
+	$ git merge --abort				// back out of the merge
+
+## Comparison
+	// run git diff to see details of the git status command
+	$ git status -s						// Show what changed (--short)
+	$ git status -sb					// Show what changed on branch (--branch)
+	$ git diff							// Show diff of unstaged changes
+	$ git diff --cached					// Show diff of staged changes
+	$ git diff HEAD 					// Show diff of all staged or unstaged changes
+	$ git diff --stat 					// Show summary of changes instead of a full diff
+	$ git diff HEAD --stat				// Show summary of all changes
+	$ git diff --stat master...develop	// Compare two branches. 3 dots.
+	$ git diff branchA...branchB 		// to inspect branchB relative to branchA 
+	$ git diff HEAD~10	(--stat)
+	$ git diff --color-words			// diff on a word-by-word basis
+	$ git diff --color-words=.			// diff on char-char basis
+	
+## Collaborating
+	git fetch <remote> <branch>		// Only fetch the specified branch.
+	git merge
+	git pull <remote>				// fetch & merge
+	
+	$ git checkout master
+	$ git pull --rebase origin		// only push to repositories created with  --bare flag
+	 
+	$ git push origin develop --tags
+	$ git push origin localBranchFix:RemoteBranchFix
+
+	Example:
+	$ git checkout master
+	$ git fetch origin master
+	$ git push origin master
+	
+## Rewriting History
+	// Only on Local Repo.
+	$ git commit --amend			// Modify your last commit message
+	$ git rebase -i HEAD~3
+	$ git rebase -i origin/master	//Squash commits, fix up commit messages etc.
+	
+	$ git reset --soft HEAD~1 		// Undo last commit. No change in Index or Working Directory.
+	$ git reset (--mixed) HEAD~1	// Undo last commit & unstage. No change in Working Directory.
+	$ git reset --hard HEAD~1		// Undo last commit & unstage & overwrites files. Destroy data - Dangerous!
+	
+	You can use it to squash 2 last commits:
+	1)	$ git reset --soft HEAD~2
+	2)	$ git commit
+	
+	
