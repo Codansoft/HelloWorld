@@ -16,7 +16,8 @@
 
 	git-gui - A portable graphical interface to Git
 	git gui [<command>] [arguments]
-
+	
+	clear
 	$ pwd "Printing the Working Directory"
 	$ explorer .				// Opens explorer
 	$ cd <drag and drop dir>
@@ -52,22 +53,32 @@
 	$ git remote rename pb paul
 
 	$ git init
-	$ git init --bare				// bare repo. Center for sharing.
+	$ git init --bare			// bare repo. Center for sharing.
 	$ touch .gitignore
-	$ git add .						// all files & subdirectories
+	$ git add .					// Add all files & subdirectories
+
+	$ git clean -n  			// List files to delete
+	$ git clean -f				// Delete untract files
 	
 	$ git commit -am 'message'		// Commit All files
 	$ rm file.txt					// Remove File
 	$ git rm file.txt
+	$ git rm file.txt --cached		// Remove file from Staged (Index)
+	
 	$ git mv file_from file_to		// Rename File
 
 ## Inspection
 	$ git log
+	$ git log -3
 	$ git log --oneline --decorate
 	$ git log --pretty=format:"%h - %an, %ar : %s"
 	$ git log --graph --oneline --decorate  --all		// *** Great ***
 	$ git log --author
+	$ git log --author="John"
+	$ git log --after="2014-7-1"
 	$ git log --grep=searchedText --no-merges
+	$ git show HEAD~2
+	$ git blame fileName.txt
 	
 ## Tagging - mark release points
 		1) lightweight - pointer to commit
@@ -83,6 +94,7 @@
 ## Branch
 	// HEAD pointer - branch you’re currently on. Snapshot of your last commit.
 	// INDEX - proposed next commit.
+	$ git branch -r				// Show remote branches
 	$ git branch develop		// Create Branch
 	$ git checkout develop		//Switching Branches
 	$ git checkout master
@@ -108,14 +120,16 @@
 	$ git diff HEAD --stat				// Show summary of all changes
 	$ git diff --stat master...develop	// Compare two branches. 3 dots.
 	$ git diff branchA...branchB 		// to inspect branchB relative to branchA 
+	$ git diff HEAD HEAD~2
+	$ git diff branch1 master			// Differences between branches
 	$ git diff HEAD~10	(--stat)
 	$ git diff --color-words			// diff on a word-by-word basis
 	$ git diff --color-words=.			// diff on char-char basis
 	
 ## Collaborating
-	git fetch <remote> <branch>		// Only fetch the specified branch.
-	git merge
-	git pull <remote>				// fetch & merge
+	$ git fetch <remote> <branch>		// Only fetch the specified branch.
+	$ git merge
+	$ git pull <remote>				// fetch & merge
 	
 	$ git checkout master
 	$ git pull --rebase origin		// only push to repositories created with  --bare flag
@@ -128,9 +142,16 @@
 	$ git fetch origin master
 	$ git push origin master
 	
+## stash
+	$ git stash --include-untracked		//all untracked files are also stashed 
+	$ git stash list
+	$ git stash show
+	$ git stash apply
+	
 ## Rewriting History
 	// Only on Local Repo.
 	$ git commit --amend			// Modify your last commit message
+	$ git commit --amend			// fix up the most recent commit
 	$ git rebase -i HEAD~3
 	$ git rebase -i origin/master	//Squash commits, fix up commit messages etc.
 	
@@ -138,8 +159,18 @@
 	$ git reset (--mixed) HEAD~1	// Undo last commit & unstage. No change in Working Directory.
 	$ git reset --hard HEAD~1		// Undo last commit & unstage & overwrites files. Destroy data - Dangerous!
 	
+	$ git reset HEAD 					// Unstages all changes. Default --mixed (only Index)
+	$ git reset --hard 7843D5A25..
+	$ git reset --hard HEAD				// Delete all my changes and start again
+	$ git checkout HEAD filename.txt 	// Reverts any changes on that file. 
+	
 	You can use it to squash 2 last commits:
-	1)	$ git reset --soft HEAD~2
-	2)	$ git commit
+		1)	$ git reset --soft HEAD~2
+		2)	$ git commit
+
+	$ git revert HEAD				// ?
+	$ git revert <commit>			// undoes a single commit in a new commit
+	
+	
 	
 	
