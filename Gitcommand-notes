@@ -4,6 +4,7 @@
 	release-1.1					// Created from the develop branch. Must merge back into master, develop.
 	develop
 		|--feature-branches		// Feature branches typically exist in developer repos only
+		|--issue-43
 ====================================================================================================
 ##Online Reference
 		http://gitref.org
@@ -35,25 +36,26 @@
 	$ git config --global --add merge.tool kdiff3		IntelliJ IDEA, P4Merge, Meld
 	$ git config --global --add mergetool.kdiff3.path "C:/Program Files/KDiff3/kdiff3.exe"
 	$ git config --global --add mergetool.kdiff3.trustExitCode false
+	$ git config --global  mergetool.keepBackup false
 
 	$ git config --global --add diff.guitool kdiff3
 	$ git config --global --add difftool.kdiff3.path "C:/Program Files/KDiff3/kdiff3.exe"
 	$ git config --global --add difftool.kdiff3.trustExitCode false
+	
+	$ git config --global credential.helper cache		// Set username and password - temporary
 	
 ## Remote
 	cd X:\Users
 	$ git clone "D:\00. Projects\Git\Powerful" PowerfulTestX
 	$ git clone file:///srv/git/project.git
 	$ git remote -v
+	$ git remote show origin				// Information
 	$ git remote add proj_name /srv/git/project.git
-	$ git fetch origin
-	$ git fetch proj_name					// get data from your remote projects
-	$ git push origin master
-	$ git remote show origin
-	$ git remote rename pb paul
+	$ git remote rename ag antonio			// Rename remote source (origin)
 
 	$ git init
-	$ git init --bare			// bare repo. Center for sharing.
+	$ git init --bare							// bare repo. Center for sharing (don’t have a working directory)
+	$ git clone --bare myProject myProject.git	// bare repository directories end in .git
 	$ touch .gitignore
 	$ git add .					// Add all files & subdirectories
 
@@ -69,7 +71,7 @@
 
 ## Inspection
 	$ git log
-	$ git log -3
+	$ git log - 3			// Show 3 last commits
 	$ git log --oneline --decorate
 	$ git log --pretty=format:"%h - %an, %ar : %s"
 	$ git log --graph --oneline --decorate  --all		// *** Great ***
@@ -94,31 +96,45 @@
 ## Branch
 	// HEAD pointer - branch you’re currently on. Snapshot of your last commit.
 	// INDEX - proposed next commit.
-	$ git branch -r				// Show remote branches
+	$ git branch -r				// Remote branches
 	$ git branch develop		// Create Branch
-	$ git checkout develop		//Switching Branches
+	$ git checkout develop		// Switching Branches
 	$ git checkout master
 	$ git checkout -b iss53		// Switched to a new branch "iss53"		== $ git branch iss53 ; $ git checkout iss53
-	git merge == git rebase
+	$ git branch -m "newName"	// Rename branch 
+	
 	
 ## Merge Branch
 	$ git checkout master
 	$ git merge hotfix
 	$ git mergetool					// Initiate merge ("merge.tool" variable in ".gitconfig")
 	$ git branch -d hotfix			// Deleted branch hotfix
-	$ git branch -vv
+	$ git branch -vv				// Branch status with Tracking info
 	$ git merge --abort				// back out of the merge
-
+	
+## Rebase 
+	// merge OR rebase?
+	// Do not rebase commits that exist outside your repository.
+	// rebase local changes before you push them
+	// Steps:
+	$ git checkout experiment-branch
+	$ git rebase master
+	$ git checkout master
+	$ git merge experiment			// fast-forward merge
+	
+	$ git pull --rebase
+	
 ## Comparison
 	// run git diff to see details of the git status command
 	$ git status -s						// Show what changed (--short)
 	$ git status -sb					// Show what changed on branch (--branch)
+	$ git log --oneline master..origin/master	// 
 	$ git diff							// Show diff of unstaged changes
 	$ git diff --cached					// Show diff of staged changes
 	$ git diff HEAD 					// Show diff of all staged or unstaged changes
 	$ git diff --stat 					// Show summary of changes instead of a full diff
 	$ git diff HEAD --stat				// Show summary of all changes
-	$ git diff --stat master...develop	// Compare two branches. 3 dots.
+	$ git diff --stat master...develop	// What was introduced in develop branch since its common ancestor.
 	$ git diff branchA...branchB 		// to inspect branchB relative to branchA 
 	$ git diff HEAD HEAD~2
 	$ git diff branch1 master			// Differences between branches
@@ -127,19 +143,35 @@
 	$ git diff --color-words=.			// diff on char-char basis
 	
 ## Collaborating
-	$ git fetch <remote> <branch>		// Only fetch the specified branch.
+	// Fetch - safe way to review commits before integrating them.
+	// 		 - only downloads the data to your local repository
+	$ git fetch origin					// Fetch all branches.
+	$ git fetch origin develop			// fetch only the develop branch.
 	$ git merge
-	$ git pull <remote>				// fetch & merge
+	$ git pull <remote>					// fetch & merge remote’s copy of the current branch
+	$ git pull --rebase origin
 	
-	$ git checkout master
-	$ git pull --rebase origin		// only push to repositories created with  --bare flag
-	 
-	$ git push origin develop --tags
-	$ git push origin localBranchFix:RemoteBranchFix
-
 	Example:
 	$ git checkout master
-	$ git fetch origin master
+	$ git fetch origin master		// fetch only master branch
+	$ git log origin/master
+	$ git merge origin/master
+	$ git rebase -i origin/master
+	$ git push origin master
+		
+	// Before PUSH: synchronize  
+	//  1. pull the remote branch and merge it into your local one
+	//	2. then push (fast-forward)
+	// You should only push to repositories created with  --bare flag 
+	// never push to another developer’s repository. 
+	
+	$ git push origin --all				// Push all your local branches
+	$ git push origin develop			// Push your develop to origin
+	$ git push origin develop --tags	// Push only develop branch with tags
+	$ git push origin localBranchFix:RemoteBranchFix
+	
+	$ git fetch origin
+	$ git fetch proj_name					// get data from your remote projects
 	$ git push origin master
 	
 ## stash
