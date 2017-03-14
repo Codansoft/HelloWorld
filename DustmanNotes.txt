@@ -1,3 +1,10 @@
 Up button in Action Bar:
 https://developer.android.com/training/appbar/actions.html
 
+Java Calendar DAY_OF_WEEK_IN_MONTH
+
+ImageView
+
+@id/
+   <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+          app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/
